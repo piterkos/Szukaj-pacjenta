@@ -41,6 +41,8 @@
             this.zakończToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.opisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.radioButtonPESEL = new System.Windows.Forms.RadioButton();
+            this.radioButtonBaza = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -113,9 +115,10 @@
             // lbl_danePacjenta
             // 
             this.lbl_danePacjenta.AutoSize = true;
-            this.lbl_danePacjenta.Location = new System.Drawing.Point(12, 170);
+            this.lbl_danePacjenta.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbl_danePacjenta.Location = new System.Drawing.Point(12, 166);
             this.lbl_danePacjenta.Name = "lbl_danePacjenta";
-            this.lbl_danePacjenta.Size = new System.Drawing.Size(80, 13);
+            this.lbl_danePacjenta.Size = new System.Drawing.Size(120, 18);
             this.lbl_danePacjenta.TabIndex = 10;
             this.lbl_danePacjenta.Text = "Dane pacjenta:";
             // 
@@ -142,7 +145,7 @@
             // zakończToolStripMenuItem
             // 
             this.zakończToolStripMenuItem.Name = "zakończToolStripMenuItem";
-            this.zakończToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.zakończToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.zakończToolStripMenuItem.Text = "Zakończ";
             this.zakończToolStripMenuItem.Click += new System.EventHandler(this.zakończToolStripMenuItem_Click);
             // 
@@ -160,11 +163,37 @@
             this.autorToolStripMenuItem.Text = "Autor";
             this.autorToolStripMenuItem.Click += new System.EventHandler(this.autorToolStripMenuItem_Click);
             // 
+            // radioButtonPESEL
+            // 
+            this.radioButtonPESEL.AutoSize = true;
+            this.radioButtonPESEL.Checked = true;
+            this.radioButtonPESEL.Location = new System.Drawing.Point(15, 132);
+            this.radioButtonPESEL.Name = "radioButtonPESEL";
+            this.radioButtonPESEL.Size = new System.Drawing.Size(123, 17);
+            this.radioButtonPESEL.TabIndex = 12;
+            this.radioButtonPESEL.TabStop = true;
+            this.radioButtonPESEL.Text = "Szukaj wg nr PESEL";
+            this.radioButtonPESEL.UseVisualStyleBackColor = true;
+            this.radioButtonPESEL.CheckedChanged += new System.EventHandler(this.radioButtonPESEL_CheckedChanged);
+            // 
+            // radioButtonBaza
+            // 
+            this.radioButtonBaza.AutoSize = true;
+            this.radioButtonBaza.Location = new System.Drawing.Point(144, 132);
+            this.radioButtonBaza.Name = "radioButtonBaza";
+            this.radioButtonBaza.Size = new System.Drawing.Size(138, 17);
+            this.radioButtonBaza.TabIndex = 13;
+            this.radioButtonBaza.Text = "Szukaj wg nr bazowego";
+            this.radioButtonBaza.UseVisualStyleBackColor = true;
+            this.radioButtonBaza.CheckedChanged += new System.EventHandler(this.radioButtonBaza_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(918, 457);
+            this.Controls.Add(this.radioButtonBaza);
+            this.Controls.Add(this.radioButtonPESEL);
             this.Controls.Add(this.lbl_danePacjenta);
             this.Controls.Add(this.rtbox_wyfiltrowaneDane);
             this.Controls.Add(this.label1);
@@ -201,6 +230,8 @@
         private System.Windows.Forms.ToolStripMenuItem zakończToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem autorToolStripMenuItem;
+        private System.Windows.Forms.RadioButton radioButtonPESEL;
+        private System.Windows.Forms.RadioButton radioButtonBaza;
     }
 }
 

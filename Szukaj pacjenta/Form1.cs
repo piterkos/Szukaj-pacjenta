@@ -32,16 +32,13 @@ namespace Szukaj_pacjenta
                     {
                         CzyZaładowanoPlik = true;
                         UtwórzBazęZplikuExcel(openFile);
-
                         cboArkusze.Items.Clear();       // wyczyść listę wyboru arkuszy
-
                         UzupełnijListęWyboruArkuszy();
                     }
                     catch (IOException ex)
                     {
                         MessageBox.Show("Nie można otworzyć pliku poniewaqż jest otwarty\n" + ex.Message);
                     }
-                    
                 }
             }
         }
@@ -82,21 +79,22 @@ namespace Szukaj_pacjenta
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            GłównaMetoda();
+            if (radioButtonPESEL.Checked == true)
+                GłównaMetoda();
+            else
+                WyfiltrujDaneWgNrBazowego();
         }
         private void GłównaMetoda()
         {
             List<EnumerableRowCollection<DataRow>> listaWierszy = new List<EnumerableRowCollection<DataRow>>();
             List<DataTable> tabele = new List<DataTable>();
             double nrPesel;
-
             if(double.TryParse(textBox_pesel.Text, out nrPesel))
             {
                 PobierzNazwyArkuszy(tabele);
                 tabele.RemoveAt(0); // w tej wersji usuń pierwszy arkusz, ponieważ nie jest do sprawdzania danych
 
                 WyfiltrujDaneWgPesel(tabele, listaWierszy, nrPesel);
-
                 rtbox_wyfiltrowaneDane.Clear(); // wyszyć dane z richtextbox
                 try
                 {
@@ -106,17 +104,10 @@ namespace Szukaj_pacjenta
                 catch (Exception)
                 {
                     lbl_danePacjenta.Text = "Brak pacjenta w bazie lub błędny pesel";
-
                 }
-                
-                
-
                 WypiszDaneObadaniach(listaWierszy);
             }
-
-           
         }
-
         /// <summary>
         /// Pobiera nazwy wszystkich arkuszy zawartych w pliku Excela
         /// </summary>
@@ -143,7 +134,33 @@ namespace Szukaj_pacjenta
                 listaWierszy.Add(wiersz);
             }
         }
-
+        private void WyfiltrujDaneWgNrBazowego()
+        {
+            rtbox_wyfiltrowaneDane.Clear();
+            string nrBazowy = textBox_pesel.Text;
+            List<EnumerableRowCollection> tabelaAsEnumerable2 = new List<EnumerableRowCollection>();
+            if (!(wynik == null))
+            {
+                foreach (DataTable tabela in wynik.Tables)
+                {
+                    var tabelaAsEnumerable = tabela.AsEnumerable();
+                    var badania = tabelaAsEnumerable
+                        .Where(p => p.ItemArray[4].ToString() == nrBazowy);
+                    badania.ToList().ForEach(w => this.rtbox_wyfiltrowaneDane.AppendText("Nr pesel to: " + w.ItemArray[0].ToString() + "\n" + "Data badania: " + w.ItemArray[2].ToString().Substring(0, 10)));
+                    if (badania.Count() > 0)
+                        lbl_danePacjenta.Text = "Dane Pacjenta:" + badania.First().ItemArray[1].ToString();
+                }
+            }
+            else
+            {
+                rtbox_wyfiltrowaneDane.Text = "Wskaż bazę danych ( plik excel).";
+            }
+            //lbl_danePacjenta.Text = tabelaAsEnumerable2
+        }
+        /// <summary>
+        /// Metoda uzupełnia richtextbox o dane badań: czas i nr badania
+        /// </summary>
+        /// <param name="listaWierszy">Kolekcja wyfiltrowanych wierszy, które zawierają szukany pesel/nr bazowy</param>
         private void WypiszDaneObadaniach(List<EnumerableRowCollection<DataRow>> listaWierszy)
         {
             for (int i = 0; i < listaWierszy.Count; i++)
@@ -158,23 +175,53 @@ namespace Szukaj_pacjenta
         {
             MessageBox.Show("Pierwszą rzeczą jest wskazanie bazy z pliku excela. Wgrywanie bazy w zależności od pliku może trochę trwać.\nNastępnie można w rozwijanej liście obejrzeć dane wg lat.\nAby poszukać po numerze pesel należe tenże numer wprowadzić do okna textBox i nacisnąć przycisk enter lub wcisnąć guzik szukaj...", "Krótki opis");
         }
-
         private void textBox_pesel_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                GłównaMetoda();
+                if (radioButtonPESEL.Checked == true)
+                    GłównaMetoda();
+                else
+                    WyfiltrujDaneWgNrBazowego();
             }
         }
-
         private void autorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Aplikacja darmowa przygotowana przez:\nKamil Pawłowski\nPiotr Pawłowski", "Autorzy");
         }
-
         private void zakończToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+        private void radioButtonPESEL_CheckedChanged(object sender, EventArgs e)
+        {
+            button2.Text = "Szukaj badania wg nr PESEL";
+        }
+        private void radioButtonBaza_CheckedChanged(object sender, EventArgs e)
+        {
+            button2.Text = "Szukaj badania wg nr bazowego";
+        }
+        private void WyfiltrujDaneWgNrPESEL()
+        {
+            rtbox_wyfiltrowaneDane.Clear();
+            string nrPESEL = textBox_pesel.Text;
+            List<EnumerableRowCollection> tabelaAsEnumerable2 = new List<EnumerableRowCollection>();
+            if (!(wynik == null))
+            {
+                foreach (DataTable tabela in wynik.Tables)
+                {
+                    var tabelaAsEnumerable = tabela.AsEnumerable();
+                    var badania = tabelaAsEnumerable
+                        .Where(p => p.ItemArray[0].ToString() == nrPESEL);
+                    badania.ToList().ForEach(w => this.rtbox_wyfiltrowaneDane.AppendText("Dnia: " + w.ItemArray[2].ToString().Substring(0, 10) + "\n" + "Nr badania: " + w.ItemArray[4].ToString()));
+                    if (badania.Count() > 0)
+                        lbl_danePacjenta.Text = "Dane Pacjenta:" + badania.First().ItemArray[1].ToString();
+                }
+            }
+            else
+            {
+                rtbox_wyfiltrowaneDane.Text = "Wskaż bazę danych ( plik excel).";
+            }
         }
     }
 }
